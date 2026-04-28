@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { TransactionProvider } from './context/TransactionContext';
+import { ThemeProvider } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 import Dashboard from './pages/Dashboard';
 import TransactionsPage from './pages/TransactionsPage';
 
@@ -26,25 +28,25 @@ function Logo() {
   );
 }
 
-export default function App() {
+function AppContent() {
   const [page, setPage] = useState<Page>('dashboard');
 
   return (
-    <TransactionProvider>
-      <div className="min-h-screen bg-background">
-        {/* Navigation */}
-        <nav className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Logo />
-              <span className="text-foreground font-semibold text-lg tracking-tight">
-                FinTrack
-              </span>
-              <span className="text-muted-foreground text-xs font-medium px-2 py-0.5 rounded-full bg-secondary">
-                Lite
-              </span>
-            </div>
-            
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Logo />
+            <span className="text-foreground font-semibold text-lg tracking-tight">
+              FinTrack
+            </span>
+            <span className="text-muted-foreground text-xs font-medium px-2 py-0.5 rounded-full bg-secondary">
+              Lite
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-4">
             <div className="flex items-center gap-1 p-1 rounded-lg bg-secondary">
               {(['dashboard', 'transactions'] as Page[]).map((p) => (
                 <button
@@ -60,22 +62,33 @@ export default function App() {
                 </button>
               ))}
             </div>
+            <ThemeToggle />
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        {/* Main Content */}
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-          {page === 'dashboard' ? <Dashboard /> : <TransactionsPage />}
-        </main>
-        
-        {/* Footer */}
-        <footer className="border-t border-border py-6 mt-8">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between text-sm text-muted-foreground">
-            <span>FinTrack Lite</span>
-            <span>Your personal finance companion</span>
-          </div>
-        </footer>
-      </div>
-    </TransactionProvider>
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {page === 'dashboard' ? <Dashboard /> : <TransactionsPage />}
+      </main>
+      
+      {/* Footer */}
+      <footer className="border-t border-border py-6 mt-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between text-sm text-muted-foreground">
+          <span>FinTrack Lite</span>
+          <span>Your personal finance companion</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <TransactionProvider>
+        <AppContent />
+      </TransactionProvider>
+    </ThemeProvider>
   );
 }
