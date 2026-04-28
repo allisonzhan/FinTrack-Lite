@@ -89,37 +89,44 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-base font-semibold text-gray-800">
-            {isEdit ? 'Edit Transaction' : 'Add Transaction'}
-          </h2>
+      <div className="bg-card rounded-2xl border border-border shadow-2xl w-full max-w-md">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">
+              {isEdit ? 'Edit Transaction' : 'Add Transaction'}
+            </h2>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {isEdit ? 'Update the transaction details' : 'Record a new income or expense'}
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl leading-none w-6 h-6 flex items-center justify-center"
+            className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-secondary transition-colors"
             aria-label="Close"
           >
-            &times;
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+        <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
           {/* Type toggle */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 p-1 rounded-lg bg-secondary">
             {(['income', 'expense'] as TransactionType[]).map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setField('type', t)}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                className={`flex-1 py-2.5 rounded-md text-sm font-medium transition-all ${
                   form.type === t
                     ? t === 'income'
-                      ? 'bg-green-500 text-white border-green-500'
-                      : 'bg-red-500 text-white border-red-500'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+                      ? 'bg-success text-success-foreground shadow-sm'
+                      : 'bg-destructive text-destructive-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {t === 'income' ? 'Income' : 'Expense'}
@@ -129,32 +136,36 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Amount ($)
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Amount
             </label>
-            <input
-              type="number"
-              min="0.01"
-              step="0.01"
-              value={form.amount}
-              onChange={(e) => setField('amount', e.target.value)}
-              placeholder="0.00"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+              <input
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={form.amount}
+                onChange={(e) => setField('amount', e.target.value)}
+                placeholder="0.00"
+                className="w-full bg-secondary border border-border rounded-lg pl-7 pr-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+              />
+            </div>
             {errors.amount && (
-              <p className="text-red-500 text-xs mt-1">{errors.amount}</p>
+              <p className="text-destructive text-xs mt-1.5">{errors.amount}</p>
             )}
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Category
             </label>
             <select
               value={form.category}
               onChange={(e) => setField('category', e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
             >
               <option value="">Select a category</option>
               {categories.map((c) => (
@@ -164,51 +175,51 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
               ))}
             </select>
             {errors.category && (
-              <p className="text-red-500 text-xs mt-1">{errors.category}</p>
+              <p className="text-destructive text-xs mt-1.5">{errors.category}</p>
             )}
           </div>
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Date</label>
             <input
               type="date"
               value={form.date}
               onChange={(e) => setField('date', e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             />
             {errors.date && (
-              <p className="text-red-500 text-xs mt-1">{errors.date}</p>
+              <p className="text-destructive text-xs mt-1.5">{errors.date}</p>
             )}
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description{' '}
-              <span className="text-gray-400 font-normal">(optional)</span>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Description
+              <span className="text-muted-foreground font-normal ml-1">(optional)</span>
             </label>
             <input
               type="text"
               value={form.description}
               onChange={(e) => setField('description', e.target.value)}
               placeholder="e.g. Lunch at campus"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-1">
+          <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2.5 border border-border rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="flex-1 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25"
             >
               {isEdit ? 'Save Changes' : 'Add Transaction'}
             </button>

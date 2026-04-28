@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Transaction, TransactionType } from '../types';
+import { TransactionType } from '../types';
 import { useTransactions } from '../context/TransactionContext';
 import TransactionList from '../components/TransactionList';
 import TransactionFormModal from '../components/TransactionFormModal';
@@ -31,25 +31,51 @@ export default function TransactionsPage() {
     setFilterDateTo('');
   }
 
+  const inputClasses = "bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all";
+  const selectClasses = `${inputClasses} appearance-none pr-8`;
+  const selectStyle = { 
+    backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, 
+    backgroundPosition: 'right 0.5rem center', 
+    backgroundRepeat: 'no-repeat', 
+    backgroundSize: '1.5em 1.5em' 
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-800">Transactions</h2>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Transactions</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            View and manage all your transactions
+          </p>
+        </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium px-4 py-2.5 rounded-lg transition-colors shadow-lg shadow-primary/25"
         >
-          + Add Transaction
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Add Transaction
         </button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm p-4">
+      <div className="bg-card rounded-xl border border-border p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          <span className="text-sm font-medium text-foreground">Filters</span>
+        </div>
+        
         <div className="flex flex-wrap gap-3 items-center">
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as TransactionType | '')}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={selectClasses}
+            style={selectStyle}
           >
             <option value="">All Types</option>
             <option value="income">Income</option>
@@ -59,7 +85,8 @@ export default function TransactionsPage() {
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={selectClasses}
+            style={selectStyle}
           >
             <option value="">All Categories</option>
             {ALL_CATEGORIES.map((c) => (
@@ -74,33 +101,39 @@ export default function TransactionsPage() {
               type="date"
               value={filterDateFrom}
               onChange={(e) => setFilterDateFrom(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClasses}
             />
-            <span className="text-gray-400 text-sm">to</span>
+            <span className="text-muted-foreground text-sm">to</span>
             <input
               type="date"
               value={filterDateTo}
               onChange={(e) => setFilterDateTo(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClasses}
             />
           </div>
 
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
               Clear filters
             </button>
           )}
 
-          <span className="ml-auto text-xs text-gray-400">
+          <span className="ml-auto text-xs font-medium text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
             {filtered.length} of {transactions.length} transactions
           </span>
         </div>
       </div>
 
-      <TransactionList transactions={filtered} />
+      {/* Transaction List */}
+      <div className="bg-card rounded-xl border border-border p-6">
+        <TransactionList transactions={filtered} />
+      </div>
 
       {showAdd && <TransactionFormModal onClose={() => setShowAdd(false)} />}
     </div>
