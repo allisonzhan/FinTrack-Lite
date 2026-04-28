@@ -14,22 +14,43 @@ export default function Dashboard() {
     .slice(0, 5);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-800">Dashboard</h2>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Track your financial activity and spending patterns
+          </p>
+        </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium px-4 py-2.5 rounded-lg transition-colors shadow-lg shadow-primary/25"
         >
-          + Add Transaction
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Add Transaction
         </button>
       </div>
 
+      {/* Summary Cards */}
       <SummaryCards />
+
+      {/* Charts */}
       <ChartComponent />
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Recent Transactions</h3>
+      {/* Recent Transactions */}
+      <div className="bg-card rounded-xl border border-border p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-base font-semibold text-foreground">Recent Transactions</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">Your latest financial activity</p>
+          </div>
+          <span className="text-xs font-medium text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
+            {recent.length} of {transactions.length}
+          </span>
+        </div>
         <TransactionList transactions={recent} />
       </div>
 
