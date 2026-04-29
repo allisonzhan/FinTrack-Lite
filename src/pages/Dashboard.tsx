@@ -3,6 +3,7 @@ import SummaryCards from '../components/SummaryCards';
 import ChartComponent from '../components/ChartComponent';
 import TransactionList from '../components/TransactionList';
 import TransactionFormModal from '../components/TransactionFormModal';
+import UpcomingTransactions from '../components/UpcomingTransactions';
 import { useTransactions } from '../context/TransactionContext';
 
 export default function Dashboard() {
@@ -40,18 +41,30 @@ export default function Dashboard() {
       {/* Charts */}
       <ChartComponent />
 
-      {/* Recent Transactions */}
-      <div className="bg-card rounded-xl border border-border p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Recent Transactions</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">Your latest financial activity</p>
+      {/* Upcoming & Recent Transactions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-card rounded-xl border border-border p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-base font-semibold text-foreground">Upcoming Transactions</h2>
+              <p className="text-sm text-muted-foreground mt-0.5">Recurring items due this week</p>
+            </div>
           </div>
-          <span className="text-xs font-medium text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
-            {recent.length} of {transactions.length}
-          </span>
+          <UpcomingTransactions transactions={transactions} />
         </div>
-        <TransactionList transactions={recent} />
+
+        <div className="bg-card rounded-xl border border-border p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-base font-semibold text-foreground">Recent Transactions</h2>
+              <p className="text-sm text-muted-foreground mt-0.5">Your latest financial activity</p>
+            </div>
+            <span className="text-xs font-medium text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
+              {recent.length} of {transactions.length}
+            </span>
+          </div>
+          <TransactionList transactions={recent} />
+        </div>
       </div>
 
       {showAdd && <TransactionFormModal onClose={() => setShowAdd(false)} />}

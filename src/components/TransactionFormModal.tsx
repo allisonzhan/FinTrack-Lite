@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Transaction, TransactionType } from '../types';
+import { Transaction, TransactionType, Frequency } from '../types';
 import { useTransactions } from '../context/TransactionContext';
-import { getCategoriesForType } from '../utils/categories';
+import { getCategoriesForType, addCustomCategory } from '../utils/categories';
 
 interface Props {
   transaction?: Transaction;
@@ -12,8 +12,12 @@ interface FormState {
   amount: string;
   type: TransactionType;
   category: string;
+  customCategory: string;
   date: string;
   description: string;
+  isRecurring: boolean;
+  frequency: Frequency;
+  nextDueDate: string;
 }
 
 export default function TransactionFormModal({ transaction, onClose }: Props) {
@@ -26,15 +30,23 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
           amount: String(transaction.amount),
           type: transaction.type,
           category: transaction.category,
+          customCategory: '',
           date: transaction.date,
           description: transaction.description ?? '',
+          isRecurring: transaction.isRecurring ?? false,
+          frequency: transaction.frequency ?? 'monthly',
+          nextDueDate: transaction.nextDueDate ?? transaction.date,
         }
       : {
           amount: '',
           type: 'expense',
           category: '',
+          customCategory: '',
           date: new Date().toISOString().split('T')[0],
           description: '',
+          isRecurring: false,
+          frequency: 'monthly',
+          nextDueDate: new Date().toISOString().split('T')[0],
         }
   );
 
@@ -45,7 +57,10 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => {
       const next = { ...prev, [key]: value };
-      if (key === 'type') next.category = '';
+      if (key === 'type') {
+        next.category = '';
+        next.customCategory = '';
+      }
       return next;
     });
     setErrors((prev) => ({ ...prev, [key]: undefined }));
@@ -57,8 +72,9 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
     if (!form.amount || isNaN(parsed) || parsed <= 0) {
       e.amount = 'Amount must be greater than 0';
     }
-    if (!form.category) e.category = 'Category is required';
+    if (!form.category && !form.customCategory.trim()) e.category = 'Category is required';
     if (!form.date) e.date = 'Date is required';
+    if (form.isRecurring && !form.nextDueDate) e.nextDueDate = 'Next due date is required for recurring';
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -67,12 +83,20 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
     e.preventDefault();
     if (!validate()) return;
 
+    const finalCategory = form.customCategory.trim() || form.category;
+    if (form.customCategory.trim()) {
+      addCustomCategory(form.type, form.customCategory.trim());
+    }
+
     const data = {
       amount: parseFloat(form.amount),
       type: form.type,
-      category: form.category,
+      category: finalCategory,
       date: form.date,
       description: form.description,
+      isRecurring: form.isRecurring,
+      frequency: form.isRecurring ? form.frequency : undefined,
+      nextDueDate: form.isRecurring ? form.nextDueDate : undefined,
     };
 
     if (isEdit && transaction) {
@@ -174,6 +198,13 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
                 </option>
               ))}
             </select>
+            <input
+              type="text"
+              value={form.customCategory}
+              onChange={(e) => setField('customCategory', e.target.value)}
+              placeholder="Or enter custom category"
+              className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all mt-2"
+            />
             {errors.category && (
               <p className="text-destructive text-xs mt-1.5">{errors.category}</p>
             )}
@@ -206,6 +237,48 @@ export default function TransactionFormModal({ transaction, onClose }: Props) {
               placeholder="e.g. Lunch at campus"
               className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             />
+          </div>
+
+          {/* Recurring */}
+          <div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={form.isRecurring}
+                onChange={(e) => setField('isRecurring', e.target.checked)}
+                className="rounded border-border text-primary focus:ring-primary"
+              />
+              <span className="text-sm font-medium text-foreground">Recurring Transaction</span>
+            </label>
+            {form.isRecurring && (
+              <div className="mt-3 space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Frequency</label>
+                  <select
+                    value={form.frequency}
+                    onChange={(e) => setField('frequency', e.target.value as Frequency)}
+                    className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Next Due Date</label>
+                  <input
+                    type="date"
+                    value={form.nextDueDate}
+                    onChange={(e) => setField('nextDueDate', e.target.value)}
+                    className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  />
+                  {errors.nextDueDate && (
+                    <p className="text-destructive text-xs mt-1.5">{errors.nextDueDate}</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Actions */}
