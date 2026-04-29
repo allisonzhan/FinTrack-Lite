@@ -53,9 +53,12 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
     <div className="bg-popover border border-border rounded-lg px-3 py-2 shadow-xl">
       {label && <p className="text-xs text-muted-foreground mb-1">{label}</p>}
       {payload.map((entry, index) => (
-        <p key={index} className="text-sm font-medium text-foreground">
-          {entry.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
-        </p>
+        <div key={index} className="space-y-1">
+          {entry.name && <p className="text-xs text-muted-foreground">{entry.name}</p>}
+          <p className="text-sm font-medium text-foreground">
+            {entry.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+          </p>
+        </div>
       ))}
     </div>
   );
@@ -87,9 +90,9 @@ export default function ChartComponent() {
                 cy="50%"
                 innerRadius={60}
                 outerRadius={100}
-                paddingAngle={2}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                labelLine={{ stroke: 'hsl(220, 10%, 55%)' }}
+                paddingAngle={3}
+                label={false}
+                labelLine={false}
               >
                 {pieData.map((_, i) => (
                   <Cell 
@@ -101,8 +104,13 @@ export default function ChartComponent() {
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend 
-                wrapperStyle={{ paddingTop: '20px' }}
+              <Legend
+                layout="horizontal"
+                align="center"
+                verticalAlign="bottom"
+                iconType="circle"
+                iconSize={8}
+                wrapperStyle={{ paddingTop: '20px', justifyContent: 'center', flexWrap: 'wrap', gap: '12px' }}
                 formatter={(value) => <span className="text-muted-foreground text-sm">{value}</span>}
               />
             </PieChart>
