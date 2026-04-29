@@ -18,6 +18,23 @@ export function addCustomCategory(type: TransactionType, category: string) {
   }
 }
 
+export function editCustomCategory(type: TransactionType, oldCategory: string, newCategory: string) {
+  const key = `fintrack_custom_${type}`;
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  const index = existing.indexOf(oldCategory);
+  if (index !== -1) {
+    existing[index] = newCategory;
+    localStorage.setItem(key, JSON.stringify(existing));
+  }
+}
+
+export function deleteCustomCategory(type: TransactionType, category: string) {
+  const key = `fintrack_custom_${type}`;
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  const filtered = existing.filter((c: string) => c !== category);
+  localStorage.setItem(key, JSON.stringify(filtered));
+}
+
 function getCustomCategories(type: TransactionType): string[] {
   const key = `fintrack_custom_${type}`;
   return JSON.parse(localStorage.getItem(key) || '[]');

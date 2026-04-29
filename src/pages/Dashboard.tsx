@@ -15,7 +15,7 @@ export default function Dashboard() {
     .slice(0, 5);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -42,9 +42,9 @@ export default function Dashboard() {
       <ChartComponent />
 
       {/* Upcoming & Recent Transactions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-xl border border-border p-6">
-          <div className="flex items-center justify-between mb-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-semibold text-foreground">Upcoming Transactions</h2>
               <p className="text-sm text-muted-foreground mt-0.5">Recurring items due this week</p>
@@ -53,8 +53,8 @@ export default function Dashboard() {
           <UpcomingTransactions transactions={transactions} />
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-semibold text-foreground">Recent Transactions</h2>
               <p className="text-sm text-muted-foreground mt-0.5">Your latest financial activity</p>
