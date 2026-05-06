@@ -1,4 +1,3 @@
-// Pure utility functions for computing financial aggregates: total income/expenses, balance, savings rate, and balance over time.
 import { Transaction } from '../types';
 
 export function getTotalIncome(transactions: Transaction[]): number {

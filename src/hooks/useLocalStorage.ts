@@ -1,4 +1,3 @@
-// Custom hook for syncing React state with localStorage, with automatic JSON serialization.
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 export function useLocalStorage<T>(

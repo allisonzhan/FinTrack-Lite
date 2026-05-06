@@ -1,4 +1,3 @@
-// Displays recurring transactions due within the next 7 days, derived from the provided transaction list.
 import React from 'react';
 import { Transaction } from '../types';
 

@@ -1,4 +1,3 @@
-// Renders a scrollable list of TransactionItem rows and manages which item is open for editing.
 import React, { useState } from 'react';
 import { Transaction } from '../types';
 import { useTransactions } from '../context/TransactionContext';

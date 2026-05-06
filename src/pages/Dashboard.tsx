@@ -1,4 +1,3 @@
-// Dashboard page: displays summary cards, expense and balance charts, upcoming recurring transactions, and recent transaction list.
 import React, { useState } from 'react';
 import SummaryCards from '../components/SummaryCards';
 import ChartComponent from '../components/ChartComponent';

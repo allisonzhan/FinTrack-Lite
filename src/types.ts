@@ -1,4 +1,3 @@
-// Shared TypeScript types and interfaces used across the application.
 export type TransactionType = 'income' | 'expense';
 
 export type Frequency = 'daily' | 'weekly' | 'monthly';

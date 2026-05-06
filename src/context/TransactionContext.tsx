@@ -1,4 +1,3 @@
-// Provides transaction state and CRUD operations to the component tree, persisted to localStorage.
 import React, { createContext, useContext } from 'react';
 import { Transaction } from '../types';
 import { useLocalStorage } from '../hooks/useLocalStorage';

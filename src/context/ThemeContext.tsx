@@ -1,4 +1,3 @@
-// Provides light/dark theme state to the component tree, with localStorage persistence and system preference detection.
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
