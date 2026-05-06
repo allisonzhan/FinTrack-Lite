@@ -1,3 +1,4 @@
+// Button that toggles between light and dark theme with animated sun/moon icons.
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 

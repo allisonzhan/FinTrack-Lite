@@ -1,3 +1,4 @@
+// Single transaction row: shows category icon, amount, date, and description with edit/delete action buttons.
 import React from 'react';
 import { Transaction } from '../types';
 import { useTransactions } from '../context/TransactionContext';

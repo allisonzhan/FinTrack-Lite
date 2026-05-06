@@ -1,3 +1,4 @@
+// Transactions page: full transaction list with type/category/date filters, CSV import/export, and add/edit modal.
 import React, { useRef, useState, useMemo } from 'react';
 import { Transaction, TransactionType } from '../types';
 import { useTransactions } from '../context/TransactionContext';

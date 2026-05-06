@@ -1,3 +1,4 @@
+// Renders a pie chart of expenses by category and an area chart of running balance over time using Recharts.
 import React from 'react';
 import {
   PieChart,

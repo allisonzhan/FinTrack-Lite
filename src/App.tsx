@@ -1,3 +1,4 @@
+// Root component: wraps the app in context providers and handles top-level navigation between Dashboard and Transactions pages.
 import React, { useState } from 'react';
 import { TransactionProvider } from './context/TransactionContext';
 import { ThemeProvider } from './context/ThemeContext';

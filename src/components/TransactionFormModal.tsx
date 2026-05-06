@@ -1,3 +1,4 @@
+// Modal form for adding or editing a transaction, including custom category management and recurring frequency settings.
 import React, { useState } from 'react';
 import { Transaction, TransactionType, Frequency } from '../types';
 import { useTransactions } from '../context/TransactionContext';

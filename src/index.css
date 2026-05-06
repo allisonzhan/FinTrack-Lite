@@ -1,3 +1,4 @@
+/* Global styles: Tailwind directives, CSS custom properties for light/dark themes, and shared utility classes. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

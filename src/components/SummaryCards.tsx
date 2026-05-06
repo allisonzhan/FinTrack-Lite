@@ -1,3 +1,4 @@
+// Renders four summary cards: current balance, total income, total expenses, and savings rate.
 import React from 'react';
 import { useTransactions } from '../context/TransactionContext';
 import {

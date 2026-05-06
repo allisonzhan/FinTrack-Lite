@@ -1,3 +1,4 @@
+// Entry point: mounts the React app into the #root DOM element.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

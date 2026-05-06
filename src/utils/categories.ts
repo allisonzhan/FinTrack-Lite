@@ -1,3 +1,4 @@
+// Predefined income/expense categories and CRUD helpers for user-defined custom categories stored in localStorage.
 import { TransactionType } from '../types';
 
 export const INCOME_CATEGORIES = ['Salary', 'Freelance', 'Other'] as const;
